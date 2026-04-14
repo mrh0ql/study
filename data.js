@@ -2,27 +2,35 @@
 // Quiz data — Stage 16 / 17 Review (Cambridge Latin)
 // ============================================================
 
-// ---------- Declension chart ----------
-// Order of rows: Nom, Gen, Dat, Acc, Abl
-// Columns: 1st Sg, 1st Pl, 2nd Sg, 2nd Pl, 3rd Sg, 3rd Pl
-// (Each cell accepts the ending with or without a leading hyphen.)
+// ---------- Declension chart (Stage 17 Notae Grammaticae) ----------
+// Matches the official sheet exactly: 1st Declension, 2nd Declension M, 3rd Declension M & F.
+// Columns: 1st Sg, 1st Pl, 2nd M Sg, 2nd M Pl, 3rd M&F Sg, 3rd M&F Pl.
+// Display strings show macrons; the checker strips macrons so you can type with or without.
 const DECLENSIONS = {
   rows: ["Nom", "Gen", "Dat", "Acc", "Abl"],
   columns: [
-    { decl: "1st",   num: "Sg" },
-    { decl: "1st",   num: "Pl" },
-    { decl: "2nd",   num: "Sg" },
-    { decl: "2nd",   num: "Pl" },
-    { decl: "3rd",   num: "Sg" },
-    { decl: "3rd",   num: "Pl" },
+    { decl: "1st",    num: "Sg" },
+    { decl: "1st",    num: "Pl" },
+    { decl: "2nd M",  num: "Sg" },
+    { decl: "2nd M",  num: "Pl" },
+    { decl: "3rd M&F",num: "Sg" },
+    { decl: "3rd M&F",num: "Pl" },
   ],
-  // Accepted answers for each row/column (array of valid variants)
+  // Canonical (with macrons) — shown in study/reference.
+  display: {
+    Nom: ["a",  "ae",   "us", "ī",    "varies", "ēs"],
+    Gen: ["ae", "ārum", "ī",  "ōrum", "is",     "um"],
+    Dat: ["ae", "īs",   "ō",  "īs",   "ī",      "ibus"],
+    Acc: ["am", "ās",   "um", "ōs",   "em",     "ēs"],
+    Abl: ["ā*", "īs",   "ō",  "īs",   "e",      "ībus"],
+  },
+  // Accepted answers — macron-insensitive via normEnding() below.
   answers: {
-    Nom: [["a"], ["ae"], ["us", "um"], ["i", "a"], ["-", "x", "varies", ""], ["es"]],
-    Gen: [["ae"], ["arum"], ["i"], ["orum"], ["is"], ["um"]],
-    Dat: [["ae"], ["is"], ["o"], ["is"], ["i"], ["ibus"]],
-    Acc: [["am"], ["as"], ["um"], ["os", "a"], ["em"], ["es"]],
-    Abl: [["a"], ["is"], ["o"], ["is"], ["e"], ["ibus"]],
+    Nom: [["a"], ["ae"],   ["us"], ["i"],    ["varies", "-", "", "x"], ["es"]],
+    Gen: [["ae"], ["arum"], ["i"],  ["orum"], ["is"],                   ["um"]],
+    Dat: [["ae"], ["is"],   ["o"],  ["is"],   ["i"],                    ["ibus"]],
+    Acc: [["am"], ["as"],   ["um"], ["os"],   ["em"],                   ["es"]],
+    Abl: [["a"],  ["is"],   ["o"],  ["is"],   ["e"],                    ["ibus"]],
   },
 };
 
@@ -130,6 +138,51 @@ const VOCAB_WORDS = [
   { latin: "vertō",      answers: ["turn"] },
 ];
 
+// ---------- Stage 17 Genitive Case Notes ----------
+// Free-text Q&A. Answers accept a set of regex patterns (macron-insensitive, case-insensitive).
+const GENITIVE_QA = [
+  {
+    q: "What does the Genitive case show (its primary use)?",
+    accept: [/^possession$/, /^possessive$/, /^poss$/, /possession/],
+  },
+  {
+    q: "What one English word is used to translate the Genitive?",
+    accept: [/^of$/, /\bof\b/],
+  },
+  {
+    q: "Which principal part of a noun entry do you look at to find its declension number?",
+    accept: [/2nd principal part/, /^2( |nd)?$/, /^second( principal part)?$/, /genitive( form)?/],
+  },
+  {
+    q: "1st declension genitive singular ending?",
+    accept: [/^-?ae$/],
+  },
+  {
+    q: "1st declension genitive plural ending?",
+    accept: [/^-?arum$/],
+  },
+  {
+    q: "2nd declension genitive singular ending?",
+    accept: [/^-?i$/],
+  },
+  {
+    q: "2nd declension genitive plural ending?",
+    accept: [/^-?orum$/],
+  },
+  {
+    q: "3rd declension genitive singular ending?",
+    accept: [/^-?is$/],
+  },
+  {
+    q: "3rd declension genitive plural ending?",
+    accept: [/^-?um$/],
+  },
+  {
+    q: "Given the entry  \"puella, puellae, f.\"  — what declension is it?",
+    accept: [/^1$/, /^1st$/, /^first$/, /^one$/],
+  },
+];
+
 // ---------- Stage 17 Question Words (8) ----------
 // Match Latin question words to their English meanings.
 // `answers` = all accepted English answers (matched case-insensitive, punctuation ignored).
@@ -205,9 +258,13 @@ function normText(s) {
     .trim();
 }
 
-// Normalize an ending: strip leading dash / whitespace, lower case
+// Normalize an ending: strip leading dash / whitespace, lower case, strip macrons
 function normEnding(s) {
-  return String(s || "").toLowerCase().replace(/^[-\s]+/, "").replace(/\s+/g, "").trim();
+  return stripMacrons(String(s || ""))
+    .toLowerCase()
+    .replace(/^[-\s]+/, "")
+    .replace(/[\s*]+/g, "")
+    .trim();
 }
 
 // Accept any of a list of valid variants

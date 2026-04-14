@@ -115,6 +115,7 @@ document.getElementById("warn-close").addEventListener("click", () => {
 const Sections = [
   { id: "declensions", title: "Declension Chart",         render: renderDeclensions,  check: checkDeclensions },
   { id: "cases",       title: "Case Uses",                render: renderCases,        check: checkCases },
+  { id: "genitive",    title: "Genitive Case (Stage 17)", render: renderGenitive,     check: checkGenitive },
   { id: "tenses",      title: "Tense Chart",              render: renderTenses,       check: checkTenses },
   { id: "words",       title: "Stage 16 Words (24)",      render: renderWords,        check: checkWords },
   { id: "qwords",      title: "Stage 17 Question Words",  render: renderQWords,       check: checkQWords },
@@ -137,14 +138,14 @@ function renderDeclensions(stage) {
       <h2>Declension Chart</h2>
       <span class="status todo" id="sec-status">Fill every cell correctly</span>
     </div>
-    <p class="footnote">Type the ending for each case and number. Variants accepted (e.g. <code>-us</code> or <code>us</code>; 2nd Nom Sg accepts <code>us</code> or <code>um</code>).</p>
+    <p class="footnote">Type the ending for each case and number. Macrons are optional (<code>a</code> = <code>ā</code>). A leading hyphen is optional. 3rd declension Nom Sg: type <code>varies</code> or leave blank.</p>
     <table class="chart" id="decl-chart">
       <thead>
         <tr>
           <th></th>
           <th colspan="2">1st Declension</th>
-          <th colspan="2">2nd Declension M/N</th>
-          <th colspan="2">3rd Declension</th>
+          <th colspan="2">2nd Declension M</th>
+          <th colspan="2">3rd Declension M &amp; F</th>
         </tr>
         <tr>
           <th></th>
@@ -267,6 +268,62 @@ function checkCases() {
     if (!ok) wrong++;
   });
   return { ok: wrong === 0, wrong };
+}
+
+// ============================================================
+// Section 2b: Genitive Case (Stage 17 focus)
+// ============================================================
+function renderGenitive(stage) {
+  const wrap = document.createElement("div");
+  wrap.className = "panel";
+  wrap.innerHTML = `
+    <div class="qheader">
+      <h2>Genitive Case <span class="pill">Cāsus Genetīvus</span></h2>
+      <span class="status todo">Answer every question</span>
+    </div>
+    <p class="footnote">Short answers; macrons are optional. Endings may be typed with or without a leading hyphen.</p>
+    <div id="gen-list"></div>
+    <div class="row" style="margin-top:12px;">
+      <button class="btn" id="gen-check">Check</button>
+      <span class="footnote" id="gen-msg"></span>
+    </div>
+  `;
+  stage.appendChild(wrap);
+
+  const list = wrap.querySelector("#gen-list");
+  GENITIVE_QA.forEach((item, i) => {
+    const row = document.createElement("div");
+    row.className = "kv";
+    row.innerHTML = `
+      <label>${item.q}</label>
+      <input type="text" data-i="${i}" autocapitalize="off" spellcheck="false">
+    `;
+    list.appendChild(row);
+  });
+
+  wrap.querySelector("#gen-check").onclick = () => {
+    const r = checkGenitive();
+    wrap.querySelector("#gen-msg").textContent = r.ok
+      ? "✓ All correct — advancing…"
+      : `✗ ${r.wrong} / ${r.total} wrong.`;
+    if (r.ok) setTimeout(advance, 600);
+  };
+}
+
+function checkGenitive() {
+  const inputs = document.querySelectorAll("#gen-list input");
+  let wrong = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const i = +inp.dataset.i;
+    // norm lowercases, strips macrons + most punctuation, keeps single spaces
+    const v = norm(inp.value);
+    const item = GENITIVE_QA[i];
+    const ok = item.accept.some(re => re.test(v));
+    inp.style.outline = ok ? "2px solid var(--ok)" : "2px solid var(--err)";
+    if (!ok) wrong++;
+  });
+  return { ok: wrong === 0, wrong, total };
 }
 
 // ============================================================

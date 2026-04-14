@@ -18,14 +18,14 @@
 
   <main class="container">
     <div class="panel">
-      <h2>Declension Endings <span class="pill">Stage 17</span></h2>
-      <table class="chart">
+      <h2>Declension Endings <span class="pill">Stage 17 Notae Grammaticae</span></h2>
+      <table class="chart" id="decl-ref-table">
         <thead>
           <tr>
             <th></th>
             <th colspan="2">1st Declension</th>
-            <th colspan="2">2nd Declension M/N</th>
-            <th colspan="2">3rd Declension</th>
+            <th colspan="2">2nd Declension M</th>
+            <th colspan="2">3rd Declension M &amp; F</th>
           </tr>
           <tr>
             <th></th>
@@ -34,17 +34,30 @@
             <th>Sg</th><th>Pl</th>
           </tr>
         </thead>
-        <tbody>
-          <tr><td class="rowhdr">Nom</td><td>-a</td><td>-ae</td><td>-us / -um</td><td>-i / -a</td><td>— (varies)</td><td>-es</td></tr>
-          <tr><td class="rowhdr">Gen</td><td>-ae</td><td>-arum</td><td>-i</td><td>-orum</td><td>-is</td><td>-um</td></tr>
-          <tr><td class="rowhdr">Dat</td><td>-ae</td><td>-is</td><td>-o</td><td>-is</td><td>-i</td><td>-ibus</td></tr>
-          <tr><td class="rowhdr">Acc</td><td>-am</td><td>-as</td><td>-um</td><td>-os / -a</td><td>-em</td><td>-es</td></tr>
-          <tr><td class="rowhdr">Abl</td><td>-a</td><td>-is</td><td>-o</td><td>-is</td><td>-e</td><td>-ibus</td></tr>
-        </tbody>
+        <tbody></tbody>
       </table>
       <p class="footnote">
-        2nd declension has both masculine (servus type) and neuter (templum type) patterns. Neuter Nom/Acc Sg is <em>-um</em>, Pl <em>-a</em>; otherwise follows the 2nd declension pattern.
+        The <em>ā*</em> in 1st Declension Ablative Singular marks a long vowel. When answering the quiz, macrons
+        are optional — <code>a</code> and <code>ā</code> both count.
       </p>
+    </div>
+
+    <div class="panel">
+      <h2>Genitive Case (Cāsus Genetīvus) <span class="pill">Stage 17 — I</span></h2>
+      <ul>
+        <li>Your <strong>final major case</strong>.</li>
+        <li>First use: the genitive shows <strong>possession</strong>.</li>
+        <li>In English, translated with <strong>"of"</strong>.</li>
+        <li>Genitive endings:
+          <ul>
+            <li>1st dec. — sg: <code>-ae</code>, pl: <code>-ārum</code></li>
+            <li>2nd dec. — sg: <code>-ī</code>,  pl: <code>-ōrum</code></li>
+            <li>3rd dec. — sg: <code>-is</code>, pl: <code>-um</code></li>
+          </ul>
+        </li>
+        <li>The <strong>2nd principal part</strong> of a noun entry is the genitive — used to find the declension number.</li>
+        <li>Example: <em>puella, puellae, f.</em> → <em>puellae</em> → genitive → <code>-ae</code> → <strong>1st declension</strong>.</li>
+      </ul>
     </div>
 
     <div class="panel">
@@ -153,6 +166,18 @@
 
   <script src="data.js"></script>
   <script>
+    // Render declension reference table
+    const declBody = document.querySelector('#decl-ref-table tbody');
+    DECLENSIONS.rows.forEach(row => {
+      const tr = document.createElement('tr');
+      const cells = DECLENSIONS.display[row].map(v => {
+        if (/^(varies|—|-|\*|)$/.test(v)) return '<td>' + (v || '—') + '</td>';
+        return '<td>-' + v + '</td>';
+      }).join('');
+      tr.innerHTML = '<td class="rowhdr">' + row + '</td>' + cells;
+      declBody.appendChild(tr);
+    });
+
     // Render Stage 17 question words
     const qwBody = document.querySelector('#qwords-table tbody');
     QUESTION_WORDS.forEach(w => {
