@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lockdown Quiz — Stage 16/17</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="lockbar" id="lockbar">
+    <span>LOCKDOWN MODE — you cannot leave until every section is mastered.</span>
+    <span class="violations" id="violations">Violations: 0</span>
+  </div>
+
+  <main class="container">
+    <div id="intro" class="panel">
+      <h2>Lockdown Quiz</h2>
+      <p>
+        You will work through <strong>six sections</strong>. Each section must be <em>fully correct</em> before you can advance.
+        Lockdown means:
+      </p>
+      <ul>
+        <li>You will be asked to enter fullscreen.</li>
+        <li>Switching tabs, minimizing, or leaving the page records a violation and warns you.</li>
+        <li>Right-click and common shortcuts that could let you cheat are disabled.</li>
+        <li>Refreshing or closing the page prompts a confirmation.</li>
+        <li>You cannot finish until every section is complete.</li>
+      </ul>
+      <p class="footnote">
+        Note: browsers cannot <em>truly</em> lock your device (that would require a dedicated kiosk app). This is a best-effort
+        in-browser lockdown that tracks and nags — enough to keep you honest while studying.
+      </p>
+      <div class="row">
+        <button class="btn" id="start-btn">Begin Lockdown Quiz</button>
+        <a class="btn secondary" href="study.html">Study First</a>
+      </div>
+    </div>
+
+    <ul class="progress" id="progress" style="display:none"></ul>
+
+    <div id="stage" style="display:none"></div>
+
+    <div id="done" class="panel" style="display:none">
+      <h2>🎉 Mastered.</h2>
+      <p>You completed every section of the Stage 16 / 17 Review. Lockdown released.</p>
+      <p id="violation-summary" class="footnote"></p>
+      <div class="row">
+        <a class="btn" href="index.html">Return to Home</a>
+        <button class="btn secondary" id="restart-btn">Restart Quiz</button>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal-bg" id="warn-modal">
+    <div class="modal">
+      <h3 id="warn-title">⚠ Tab / focus violation</h3>
+      <p id="warn-body">You left the quiz tab. This was logged. Return to fullscreen and continue.</p>
+      <button class="btn" id="warn-close">Return to Quiz</button>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="quiz.js"></script>
+</body>
+</html>
