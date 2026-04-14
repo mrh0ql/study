@@ -1,0 +1,251 @@
+:root {
+  --bg: #0f1222;
+  --panel: #161a33;
+  --panel-2: #1e2447;
+  --accent: #7c9cff;
+  --accent-2: #58d6a8;
+  --warn: #ffb454;
+  --err: #ff6b6b;
+  --ok: #58d6a8;
+  --text: #e8ecff;
+  --muted: #9aa3c7;
+  --border: #2a315f;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: radial-gradient(1200px 800px at 20% -10%, #1b2250 0%, var(--bg) 60%) fixed, var(--bg);
+  color: var(--text);
+  min-height: 100%;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+header.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,0.15);
+  position: sticky; top: 0; z-index: 5;
+  backdrop-filter: blur(6px);
+}
+
+header.topbar h1 {
+  font-size: 18px; margin: 0;
+}
+
+nav.topnav a {
+  margin-left: 14px;
+  color: var(--muted);
+  font-weight: 600;
+}
+nav.topnav a.active { color: var(--text); }
+
+h1, h2, h3 { line-height: 1.2; }
+
+.hero {
+  padding: 48px 24px;
+  text-align: center;
+}
+.hero h2 {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+.hero p { color: var(--muted); max-width: 700px; margin: 0 auto 24px; }
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+}
+.card h3 { margin-top: 0; color: var(--accent); }
+.card p { color: var(--muted); }
+
+.btn {
+  display: inline-block;
+  background: var(--accent);
+  color: #0b0f24;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn.secondary { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); }
+.btn.danger { background: var(--err); color: white; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.panel h2 { margin-top: 0; }
+
+table.chart {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0;
+}
+table.chart th, table.chart td {
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  text-align: center;
+  font-size: 14px;
+  vertical-align: middle;
+}
+table.chart th { background: var(--panel-2); color: var(--accent); }
+table.chart td.rowhdr { background: var(--panel-2); color: var(--accent); font-weight: 700; }
+table.chart td input {
+  width: 100%;
+  background: transparent;
+  color: var(--text);
+  border: 0;
+  text-align: center;
+  font: inherit;
+  outline: none;
+  padding: 6px 2px;
+}
+table.chart td.ok { background: rgba(88, 214, 168, 0.2); }
+table.chart td.err { background: rgba(255, 107, 107, 0.2); }
+
+.kv {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 8px 16px;
+  margin: 6px 0;
+}
+.kv label { color: var(--muted); }
+
+input[type=text], textarea {
+  width: 100%;
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font: inherit;
+  outline: none;
+}
+input[type=text]:focus, textarea:focus { border-color: var(--accent); }
+textarea { min-height: 180px; font-family: ui-monospace, Menlo, monospace; line-height: 1.45; }
+
+.row {
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+}
+
+.status {
+  display: inline-block; padding: 4px 8px; border-radius: 6px;
+  font-size: 12px; font-weight: 700;
+}
+.status.ok { background: rgba(88,214,168,0.2); color: var(--ok); }
+.status.err { background: rgba(255,107,107,0.2); color: var(--err); }
+.status.todo { background: rgba(154,163,199,0.2); color: var(--muted); }
+.status.locked { background: rgba(255,180,84,0.2); color: var(--warn); }
+
+ul.progress {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+ul.progress li {
+  padding: 6px 10px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+}
+ul.progress li.done { border-color: var(--ok); color: var(--ok); }
+ul.progress li.current { border-color: var(--accent); color: var(--accent); }
+
+.lockbar {
+  position: sticky; top: 0;
+  background: var(--warn);
+  color: #111;
+  padding: 8px 16px;
+  font-weight: 700;
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 10;
+}
+.lockbar .violations { font-weight: 400; opacity: 0.9; }
+
+.modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 50;
+}
+.modal {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 480px; width: 92%;
+  text-align: center;
+}
+.modal h3 { color: var(--warn); margin-top: 0; }
+
+.diff {
+  font-family: ui-monospace, Menlo, monospace;
+  white-space: pre-wrap;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 13px;
+}
+.diff .ok { color: var(--ok); }
+.diff .err { color: var(--err); text-decoration: underline; }
+
+.footnote { color: var(--muted); font-size: 12px; }
+
+.qheader {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+
+.pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  margin-left: 6px;
+}
+
+.section-title {
+  color: var(--accent-2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  margin-top: 20px;
+}
+
+details { margin: 8px 0; }
+details summary { cursor: pointer; color: var(--accent); }
