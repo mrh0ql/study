@@ -104,6 +104,18 @@
     </div>
 
     <div class="panel">
+      <h2>Stage 17 — Question Words (8)</h2>
+      <table class="chart" id="qwords-table">
+        <thead><tr><th>Latin</th><th>English</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <p class="footnote">
+        <strong>nōnne</strong> expects the answer "yes"; <strong>num</strong> expects the answer "no".
+        The suffix <strong>-ne</strong> attached to the first word of a clause simply turns it into a yes/no question.
+      </p>
+    </div>
+
+    <div class="panel">
       <h2>Stage 16 — Review Checklist (24 words)</h2>
       <table class="chart" id="vocab-words-table">
         <thead><tr><th>Latin</th><th>English</th></tr></thead>
@@ -141,6 +153,14 @@
 
   <script src="data.js"></script>
   <script>
+    // Render Stage 17 question words
+    const qwBody = document.querySelector('#qwords-table tbody');
+    QUESTION_WORDS.forEach(w => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + w.latin + '</td><td>' + w.answers[0] + '</td>';
+      qwBody.appendChild(tr);
+    });
+
     // Render Stage 16 checklist
     const vwBody = document.querySelector('#vocab-words-table tbody');
     VOCAB_WORDS.forEach(w => {

@@ -130,6 +130,20 @@ const VOCAB_WORDS = [
   { latin: "vertō",      answers: ["turn"] },
 ];
 
+// ---------- Stage 17 Question Words (8) ----------
+// Match Latin question words to their English meanings.
+// `answers` = all accepted English answers (matched case-insensitive, punctuation ignored).
+const QUESTION_WORDS = [
+  { latin: "cur",     answers: ["why", "why?"] },
+  { latin: "nōnne",   answers: ["surely", "surely?", "surely yes", "yes", "expects yes"] },
+  { latin: "quid",    answers: ["what", "what?"] },
+  { latin: "-ne",     answers: ["yes/no", "yes or no", "yes/no?", "question", "question marker", "asks a yes/no question"] },
+  { latin: "num",     answers: ["surely not", "surely not?", "surely...not", "surelynot", "no", "expects no"] },
+  { latin: "ubi",     answers: ["where", "where?"] },
+  { latin: "quis",    answers: ["who", "who?"] },
+  { latin: "quōmodo", answers: ["how", "how?"] },
+];
+
 // ---------- Apostles' Creed ----------
 // Latin and English. The "focus" excerpt from the task is typed in full within the full text.
 const CREED_LATIN = `Credo in Deum, Patrem omnipotentem, Creatorem caeli et terrae.

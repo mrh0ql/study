@@ -117,6 +117,7 @@ const Sections = [
   { id: "cases",       title: "Case Uses",                render: renderCases,        check: checkCases },
   { id: "tenses",      title: "Tense Chart",              render: renderTenses,       check: checkTenses },
   { id: "words",       title: "Stage 16 Words (24)",      render: renderWords,        check: checkWords },
+  { id: "qwords",      title: "Stage 17 Question Words",  render: renderQWords,       check: checkQWords },
   { id: "vocab",       title: "Stage 16 People & Res",    render: renderVocab,        check: checkVocab },
   { id: "creed_la",    title: "Apostles' Creed — Latin",   render: renderCreedLatin,    check: checkCreedLatin },
   { id: "creed_en",    title: "Apostles' Creed — English", render: renderCreedEnglish,  check: checkCreedEnglish },
@@ -394,7 +395,74 @@ function checkWords() {
 }
 
 // ============================================================
-// Section 5: People / Res
+// Section 5: Stage 17 Question Words (8)
+// ============================================================
+function renderQWords(stage) {
+  const wrap = document.createElement("div");
+  wrap.className = "panel";
+  wrap.innerHTML = `
+    <div class="qheader">
+      <h2>Stage 17 — Question Words</h2>
+      <span class="status todo">Translate all 8</span>
+    </div>
+    <p class="footnote">Type the English for each Latin question word. <em>nōnne</em> → "surely" (expects yes); <em>num</em> → "surely not" (expects no); <em>-ne</em> → turns a clause into a yes/no question.</p>
+    <table class="chart" id="qwords-quiz">
+      <thead><tr><th>Latin</th><th>Your answer</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <div class="row" style="margin-top:12px;">
+      <button class="btn" id="qwords-check">Check</button>
+      <button class="btn secondary" id="qwords-shuffle">Shuffle order</button>
+      <span class="footnote" id="qwords-msg"></span>
+    </div>
+  `;
+  stage.appendChild(wrap);
+
+  const body = wrap.querySelector("#qwords-quiz tbody");
+  function render(order) {
+    body.innerHTML = "";
+    order.forEach(i => {
+      const w = QUESTION_WORDS[i];
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td class="rowhdr">${w.latin}</td><td><input type="text" data-i="${i}" autocapitalize="off" spellcheck="false" placeholder="English"></td>`;
+      body.appendChild(tr);
+    });
+  }
+  const baseOrder = QUESTION_WORDS.map((_, i) => i);
+  render(baseOrder);
+
+  wrap.querySelector("#qwords-shuffle").onclick = () => {
+    const shuffled = baseOrder.slice().sort(() => Math.random() - 0.5);
+    render(shuffled);
+  };
+
+  wrap.querySelector("#qwords-check").onclick = () => {
+    const r = checkQWords();
+    wrap.querySelector("#qwords-msg").textContent = r.ok
+      ? "✓ All 8 correct — advancing…"
+      : `✗ ${r.wrong} / ${r.total} wrong.`;
+    if (r.ok) setTimeout(advance, 600);
+  };
+}
+
+function checkQWords() {
+  const inputs = document.querySelectorAll("#qwords-quiz input");
+  let wrong = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const i = +inp.dataset.i;
+    const answers = QUESTION_WORDS[i].answers;
+    const v = norm(inp.value);
+    const ok = v.length > 0 && answers.some(a => norm(a) === v);
+    inp.parentElement.classList.toggle("ok", ok);
+    inp.parentElement.classList.toggle("err", !ok);
+    if (!ok) wrong++;
+  });
+  return { ok: wrong === 0, wrong, total };
+}
+
+// ============================================================
+// Section 6: People / Res
 // ============================================================
 function renderVocab(stage) {
   const wrap = document.createElement("div");
