@@ -100,6 +100,36 @@ const VOCAB = {
   cultura: "cultural / cultural background section of the stage",
 };
 
+// ---------- Stage 16 Review Checklist (24 words) ----------
+// Each `answers` array holds all acceptable English meanings for the Latin word.
+// The quiz accepts ANY one of them; macrons are optional on input.
+const VOCAB_WORDS = [
+  { latin: "aedificō",   answers: ["build"] },
+  { latin: "auxilium",   answers: ["help"] },
+  { latin: "bonus",      answers: ["good"] },
+  { latin: "cōnsentiō",  answers: ["agree"] },
+  { latin: "cōnsilium",  answers: ["plan", "idea"] },
+  { latin: "deinde",     answers: ["then"] },
+  { latin: "dēlectō",    answers: ["delight", "please"] },
+  { latin: "effugiō",    answers: ["escape"] },
+  { latin: "flōs",       answers: ["flower"] },
+  { latin: "imperātor",  answers: ["emperor"] },
+  { latin: "inter",      answers: ["among", "between"] },
+  { latin: "ita",        answers: ["in this way"] },
+  { latin: "melior",     answers: ["better"] },
+  { latin: "nāvigō",     answers: ["sail"] },
+  { latin: "nōnne",      answers: ["surely", "surely?"] },
+  { latin: "pereō",      answers: ["die", "perish"] },
+  { latin: "pōnō",       answers: ["place", "put", "put up"] },
+  { latin: "postrīdiē",  answers: ["on the next day", "the next day", "next day"] },
+  { latin: "pūniō",      answers: ["punish"] },
+  { latin: "simulac",    answers: ["as soon as"] },
+  { latin: "simulatque", answers: ["as soon as"] },
+  { latin: "summus",     answers: ["highest", "greatest", "top"] },
+  { latin: "tollō",      answers: ["raise", "lift up", "hold up"] },
+  { latin: "vertō",      answers: ["turn"] },
+];
+
 // ---------- Apostles' Creed ----------
 // Latin and English. The "focus" excerpt from the task is typed in full within the full text.
 const CREED_LATIN = `Credo in Deum, Patrem omnipotentem, Creatorem caeli et terrae.
@@ -132,8 +162,20 @@ inde venturus est iudicare vivos et mortuos.
 Credo in Spiritum Sanctum`;
 
 // ---------- Helpers ----------
-function norm(s) {
+function stripMacrons(s) {
   return String(s || "")
+    .normalize("NFD")
+    .replace(/[\u0304]/g, "")   // combining macron
+    .normalize("NFC")
+    .replace(/[āĀ]/g, "a")
+    .replace(/[ēĒ]/g, "e")
+    .replace(/[īĪ]/g, "i")
+    .replace(/[ōŌ]/g, "o")
+    .replace(/[ūŪ]/g, "u");
+}
+
+function norm(s) {
+  return stripMacrons(String(s || ""))
     .toLowerCase()
     .replace(/[.,;:!?()"“”‘’']/g, "")
     .replace(/\s+/g, " ")

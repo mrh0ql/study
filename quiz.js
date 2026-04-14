@@ -113,12 +113,13 @@ document.getElementById("warn-close").addEventListener("click", () => {
 // Section definitions
 // ============================================================
 const Sections = [
-  { id: "declensions", title: "Declension Chart",        render: renderDeclensions, check: checkDeclensions },
-  { id: "cases",       title: "Case Uses",               render: renderCases,       check: checkCases },
-  { id: "tenses",      title: "Tense Chart",             render: renderTenses,      check: checkTenses },
-  { id: "vocab",       title: "Stage 16 Vocabulary",     render: renderVocab,       check: checkVocab },
-  { id: "creed_la",    title: "Apostles' Creed — Latin",  render: renderCreedLatin,   check: checkCreedLatin },
-  { id: "creed_en",    title: "Apostles' Creed — English", render: renderCreedEnglish, check: checkCreedEnglish },
+  { id: "declensions", title: "Declension Chart",         render: renderDeclensions,  check: checkDeclensions },
+  { id: "cases",       title: "Case Uses",                render: renderCases,        check: checkCases },
+  { id: "tenses",      title: "Tense Chart",              render: renderTenses,       check: checkTenses },
+  { id: "words",       title: "Stage 16 Words (24)",      render: renderWords,        check: checkWords },
+  { id: "vocab",       title: "Stage 16 People & Res",    render: renderVocab,        check: checkVocab },
+  { id: "creed_la",    title: "Apostles' Creed — Latin",   render: renderCreedLatin,    check: checkCreedLatin },
+  { id: "creed_en",    title: "Apostles' Creed — English", render: renderCreedEnglish,  check: checkCreedEnglish },
 ];
 
 let currentIdx = 0;
@@ -326,7 +327,74 @@ function checkTenses() {
 }
 
 // ============================================================
-// Section 4: Vocab
+// Section 4: Stage 16 Words (24)
+// ============================================================
+function renderWords(stage) {
+  const wrap = document.createElement("div");
+  wrap.className = "panel";
+  wrap.innerHTML = `
+    <div class="qheader">
+      <h2>Stage 16 — 24 Checklist Words</h2>
+      <span class="status todo">Translate every word</span>
+    </div>
+    <p class="footnote">Type one acceptable English meaning for each Latin word. Macrons are optional. Words with multiple meanings (e.g. <em>pōnō</em> = place / put / put up) accept any one.</p>
+    <table class="chart" id="words-table">
+      <thead><tr><th>Latin</th><th>Your answer</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <div class="row" style="margin-top:12px;">
+      <button class="btn" id="words-check">Check</button>
+      <button class="btn secondary" id="words-shuffle">Shuffle order</button>
+      <span class="footnote" id="words-msg"></span>
+    </div>
+  `;
+  stage.appendChild(wrap);
+
+  const body = wrap.querySelector("#words-table tbody");
+  function render(order) {
+    body.innerHTML = "";
+    order.forEach(i => {
+      const w = VOCAB_WORDS[i];
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td class="rowhdr">${w.latin}</td><td><input type="text" data-i="${i}" autocapitalize="off" spellcheck="false" placeholder="English"></td>`;
+      body.appendChild(tr);
+    });
+  }
+  const baseOrder = VOCAB_WORDS.map((_, i) => i);
+  render(baseOrder);
+
+  wrap.querySelector("#words-shuffle").onclick = () => {
+    const shuffled = baseOrder.slice().sort(() => Math.random() - 0.5);
+    render(shuffled);
+  };
+
+  wrap.querySelector("#words-check").onclick = () => {
+    const r = checkWords();
+    wrap.querySelector("#words-msg").textContent = r.ok
+      ? "✓ All 24 correct — advancing…"
+      : `✗ ${r.wrong} / ${r.total} wrong.`;
+    if (r.ok) setTimeout(advance, 600);
+  };
+}
+
+function checkWords() {
+  const inputs = document.querySelectorAll("#words-table input");
+  let wrong = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const i = +inp.dataset.i;
+    const answers = VOCAB_WORDS[i].answers;
+    const v = norm(inp.value);
+    const ok = v.length > 0 && answers.some(a => norm(a) === v);
+    inp.parentElement.classList.toggle("ok", ok);
+    inp.parentElement.classList.toggle("err", !ok);
+    if (!ok) wrong++;
+  });
+  return { ok: wrong === 0, wrong, total };
+}
+
+// ============================================================
+// Section 5: People / Res
 // ============================================================
 function renderVocab(stage) {
   const wrap = document.createElement("div");

@@ -104,6 +104,14 @@
     </div>
 
     <div class="panel">
+      <h2>Stage 16 — Review Checklist (24 words)</h2>
+      <table class="chart" id="vocab-words-table">
+        <thead><tr><th>Latin</th><th>English</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
       <h2>Stage 16 Vocabulary — People &amp; Res</h2>
       <div class="kv">
         <label>fabula</label><div>story / play</div>
@@ -133,6 +141,14 @@
 
   <script src="data.js"></script>
   <script>
+    // Render Stage 16 checklist
+    const vwBody = document.querySelector('#vocab-words-table tbody');
+    VOCAB_WORDS.forEach(w => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + w.latin + '</td><td>' + w.answers.join(', ') + '</td>';
+      vwBody.appendChild(tr);
+    });
+
     // Render people
     const ul = document.getElementById('people-list');
     VOCAB.people.forEach(p => {
